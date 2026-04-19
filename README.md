@@ -34,12 +34,12 @@ FoodSafe AI is a production-ready, enterprise-grade food safety inspection platf
 
 ## 🚀 Setup & Installation
 
-Follow these steps to deploy the project locally:
+### Local Development
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/foodsafe-ai.git
-   cd foodsafe-ai
+   git clone https://github.com/HarshXTrisha/fssai_analysis.git
+   cd fssai_analysis
    ```
 
 2. **Install dependencies**
@@ -50,8 +50,10 @@ Follow these steps to deploy the project locally:
 3. **Configure Environment Variables**
    Create a `.env.local` file in the root directory and add your Google Gemini API key:
    ```env
-   NEXT_PUBLIC_GEMINI_API_KEY="your_api_key_here"
+   GEMINI_API_KEY="your_api_key_here"
    ```
+   
+   Get your API key from: https://aistudio.google.com/app/apikey
 
 4. **Run the development server**
    ```bash
@@ -61,11 +63,48 @@ Follow these steps to deploy the project locally:
 5. **Open the App**
    Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
 
+### Vercel Deployment
+
+1. **Push to GitHub** (already done!)
+   ```bash
+   git push origin main
+   ```
+
+2. **Import to Vercel**
+   - Go to [vercel.com](https://vercel.com) and sign in
+   - Click "Add New Project"
+   - Import your GitHub repository: `HarshXTrisha/fssai_analysis`
+
+3. **Configure Environment Variables in Vercel**
+   - In your Vercel project dashboard, go to "Settings" → "Environment Variables"
+   - Add the following variable:
+     - **Name**: `GEMINI_API_KEY`
+     - **Value**: Your actual Gemini API key from https://aistudio.google.com/app/apikey
+     - **Environment**: Select all (Production, Preview, Development)
+   - Click "Save"
+
+4. **Deploy**
+   - Vercel will automatically deploy your app
+   - If already deployed, go to "Deployments" → click the three dots → "Redeploy"
+
+5. **Important Notes**
+   - The API key is server-side only (no `NEXT_PUBLIC_` prefix) for security
+   - If the API key is missing or quota is exceeded, the app returns a realistic mock response
+   - The mock fallback ensures the UI never crashes with blank errors
+
 ## 🤝 How it Works
 1. **Upload**: Users upload an image of a kitchen environment (PNG, JPG).
-2. **Scan**: The Gemini 2.0 Flash model conducts an intensive visual analysis, identifying hygiene, equipment, storage, and premises layout data.
-3. **Parse**: Our strict prompt-engineering enforces a structured JSON response bounding the results within standard FSSAI requirements.
-4. **Display**: The UI reacts dynamically, scoring the kitchen and filtering violations into an actionable "Repair/Remediation" checklist.
+2. **Analyze**: The image is sent to a secure server-side API route (`/api/analyze`).
+3. **Scan**: The Gemini 2.0 Flash model conducts an intensive visual analysis, identifying hygiene, equipment, storage, and premises layout data.
+4. **Parse**: Our strict prompt-engineering enforces a structured JSON response bounding the results within standard FSSAI requirements.
+5. **Fallback**: If API quota is exceeded or errors occur, a realistic mock response is returned (Score: 34, HIGH risk, 3 critical violations).
+6. **Display**: The UI reacts dynamically, scoring the kitchen and filtering violations into an actionable "Repair/Remediation" checklist.
+
+## 🔒 Security Features
+- API key is server-side only (never exposed to browser)
+- All Gemini API calls happen through Next.js API routes
+- Prevents quota exhaustion from client-side calls
+- Graceful fallback ensures app never crashes
 
 ---
 <div align="center">

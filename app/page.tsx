@@ -8,7 +8,7 @@ import {
   ChefHat, ClipboardList, ThermometerSnowflake, UserCheck, Droplets,
   ArrowRight, Sparkles, AlertCircle
 } from 'lucide-react';
-import { analyzeKitchen, AuditReport } from '@/lib/fssai-engine';
+import { AuditReport } from '@/lib/fssai-engine';
 import AnalysisDashboard from '@/components/AnalysisDashboard';
 
 export default function FoodSafeAI() {
@@ -53,7 +53,22 @@ export default function FoodSafeAI() {
     setIsAnalyzing(true);
     setError(null);
     try {
-      const result = await analyzeKitchen(image, mimeType);
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          image,
+          mimeType
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Analysis request failed');
+      }
+
+      const result = await response.json();
       setReport(result);
       
       // Update history
@@ -62,7 +77,7 @@ export default function FoodSafeAI() {
       localStorage.setItem('foodsafe_history', JSON.stringify(newHistory));
     } catch (err) {
       console.error(err);
-      setError("AI analysis failed. Please ensure your Gemini API key is configured correctly.");
+      setError("AI analysis failed. Please try again or contact support.");
     } finally {
       setIsAnalyzing(false);
     }

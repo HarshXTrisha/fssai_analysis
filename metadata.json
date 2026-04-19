@@ -1,0 +1,6 @@
+{
+  "name": "FoodSafe AI",
+  "description": "AI-powered FSSAI food safety inspection platform using Gemini 2.0 Flash Vision for real-time kitchen compliance audits.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["Image Analysis", "FSSAI Compliance Audit", "PDF Reporting"]
+}
